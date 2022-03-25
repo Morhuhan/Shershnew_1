@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define N 17  // Всего чисел в файле
-#define S 10   // Размер числа
+#define N 8  // Всего чисел в файле
+#define S 2   // Размер числа
 
 
 // Приводит число к заданному размеру size
@@ -25,17 +25,23 @@ int stabilisation(int number, int size) {
 }
 
 
-// Отправляет полученное число в функцию  stabilisation а затем записывет его в source файл
-void writing_source(FILE* source_file, int number) {                  
-    number = stabilisation(number, S);                               
-	fprintf (source_file, "%d\n", number);
+// Записываем числа из файла source в массив source_array
+void writing_source_array(int* source_array,  FILE *source_file) {   
+    fscanf(source_file, "%d", (source_array));
 }
 
-// Записываем числа из файла source в массив source_array
-void writing_source_array(int* source_array, int size_source_array, FILE *source_file) {   
+// Отправляет полученное число в функцию  stabilisation а затем записывет его в source файл
+void writing_source(FILE* source_file, int* source_array, int size_source_array) {                  
+
+    int number;
+
     for (int i = 0; i < size_source_array; i++) {
-        fscanf(source_file, "%d", (source_array + i));
+    number = rand();  
+    number = stabilisation(number, S);                             
+    fprintf(source_file, "%d", number);
+    writing_source_array(source_array, source_file);
     }
+
 }
 
 // Читаем числа из массива и записываем их в случайном порядке в файл target
@@ -62,17 +68,11 @@ void main (void) {
 	srand(time(NULL));
 	
 	source_file = fopen("source.txt", "w");
-        for(int i = 0; i < N; i++){
-            writing_source(source_file, rand());
-        }
+    writing_source(source_file, source_array, size_source_array);
 	fclose(source_file);
 
-    source_file = fopen("source.txt", "r");
-        writing_source_array(source_array, size_source_array, source_file);
-    fclose(source_file);
-
     target_file = fopen("target.txt", "w");
-        rand_writing_target_array(source_array, size_source_array, target_file);
+    rand_writing_target_array(source_array, size_source_array, target_file);
     fclose(target_file);
 
 }
